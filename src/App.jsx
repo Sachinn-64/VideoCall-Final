@@ -18,6 +18,7 @@ export function getUrlParams(url = window.location.href) {
 
 export default function App() {
   const [captions, setCaptions] = React.useState([]);
+  const [sourceLanguage, setSourceLanguage] = React.useState("en-IN");
   const [targetLanguage, setTargetLanguage] = React.useState("hi-IN");
   const [isListening, setIsListening] = React.useState(false);
   const [recognitionSupported, setRecognitionSupported] = React.useState(true);
@@ -102,7 +103,7 @@ export default function App() {
 
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
+    recognition.lang = sourceLanguage;
 
     recognition.onstart = () => {
       console.log("Speech recognition started");
@@ -117,7 +118,7 @@ export default function App() {
         console.log("Final transcript:", transcript);
         
         try {
-          const translation = await translateText(transcript, targetLanguage);
+          const translation = await translateText(transcript, sourceLanguage, targetLanguage);
           addCaption("You", translation);
           
           if (zpInstanceRef.current) {
@@ -280,46 +281,92 @@ export default function App() {
             )}
           </div>
           
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", marginRight: "10px" }}>Translate to:</label>
-            <select
-              value={targetLanguage}
-              onChange={(e) => setTargetLanguage(e.target.value)}
-              disabled={isListening}
-              style={{
-                padding: "5px 10px",
-                borderRadius: "4px",
-                border: "1px solid #444",
-                backgroundColor: isListening ? "#222" : "#333",
-                color: isListening ? "#666" : "white",
-                fontSize: "14px",
-                cursor: isListening ? "not-allowed" : "pointer"
-              }}
-            >
-              <option value="en-IN">English (India)</option>
-              <option value="hi-IN">Hindi</option>
-              <option value="pa-IN">Punjabi</option>
-              <option value="te-IN">Telugu</option>
-              <option value="ta-IN">Tamil</option>
-              <option value="mr-IN">Marathi</option>
-              <option value="kn-IN">Kannada</option>
-              <option value="ml-IN">Malayalam</option>
-              <option value="bn-IN">Bengali</option>
-              <option value="gu-IN">Gujarati</option>
-              <option value="or-IN">Odia</option>
-              <option value="as-IN">Assamese</option>
-              <option value="ur-IN">Urdu</option>
-              <option value="ks-IN">Kashmiri</option>
-              <option value="kok-IN">Konkani</option>
-              <option value="mai-IN">Maithili</option>
-              <option value="sd-IN">Sindhi</option>
-              <option value="sa-IN">Sanskrit</option>
-              <option value="mni-IN">Manipuri (Meitei)</option>
-              <option value="ne-IN">Nepali</option>
-              <option value="bho-IN">Bhojpuri</option>
-              <option value="sat-IN">Santali</option>
-              <option value="dog-IN">Dogri</option>
-            </select>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <label style={{ fontSize: "14px", marginRight: "10px", width: "90px" }}>Translate from:</label>
+              <select
+                value={sourceLanguage}
+                onChange={(e) => setSourceLanguage(e.target.value)}
+                disabled={isListening}
+                style={{
+                  flex: 1,
+                  padding: "5px 10px",
+                  borderRadius: "4px",
+                  border: "1px solid #444",
+                  backgroundColor: isListening ? "#222" : "#333",
+                  color: isListening ? "#666" : "white",
+                  fontSize: "14px",
+                  cursor: isListening ? "not-allowed" : "pointer"
+                }}
+              >
+                <option value="en-IN">English (India)</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="pa-IN">Punjabi</option>
+                <option value="te-IN">Telugu</option>
+                <option value="ta-IN">Tamil</option>
+                <option value="mr-IN">Marathi</option>
+                <option value="kn-IN">Kannada</option>
+                <option value="ml-IN">Malayalam</option>
+                <option value="bn-IN">Bengali</option>
+                <option value="gu-IN">Gujarati</option>
+                <option value="or-IN">Odia</option>
+                <option value="as-IN">Assamese</option>
+                <option value="ur-IN">Urdu</option>
+                <option value="ks-IN">Kashmiri</option>
+                <option value="kok-IN">Konkani</option>
+                <option value="mai-IN">Maithili</option>
+                <option value="sd-IN">Sindhi</option>
+                <option value="sa-IN">Sanskrit</option>
+                <option value="mni-IN">Manipuri (Meitei)</option>
+                <option value="ne-IN">Nepali</option>
+                <option value="bho-IN">Bhojpuri</option>
+                <option value="sat-IN">Santali</option>
+                <option value="dog-IN">Dogri</option>
+              </select>
+            </div>
+            
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <label style={{ fontSize: "14px", marginRight: "10px", width: "90px" }}>Translate to:</label>
+              <select
+                value={targetLanguage}
+                onChange={(e) => setTargetLanguage(e.target.value)}
+                disabled={isListening}
+                style={{
+                  flex: 1,
+                  padding: "5px 10px",
+                  borderRadius: "4px",
+                  border: "1px solid #444",
+                  backgroundColor: isListening ? "#222" : "#333",
+                  color: isListening ? "#666" : "white",
+                  fontSize: "14px",
+                  cursor: isListening ? "not-allowed" : "pointer"
+                }}
+              >
+                <option value="en-IN">English (India)</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="pa-IN">Punjabi</option>
+                <option value="te-IN">Telugu</option>
+                <option value="ta-IN">Tamil</option>
+                <option value="mr-IN">Marathi</option>
+                <option value="kn-IN">Kannada</option>
+                <option value="ml-IN">Malayalam</option>
+                <option value="bn-IN">Bengali</option>
+                <option value="gu-IN">Gujarati</option>
+                <option value="or-IN">Odia</option>
+                <option value="as-IN">Assamese</option>
+                <option value="ur-IN">Urdu</option>
+                <option value="ks-IN">Kashmiri</option>
+                <option value="kok-IN">Konkani</option>
+                <option value="mai-IN">Maithili</option>
+                <option value="sd-IN">Sindhi</option>
+                <option value="sa-IN">Sanskrit</option>
+                <option value="mni-IN">Manipuri (Meitei)</option>
+                <option value="ne-IN">Nepali</option>
+                <option value="bho-IN">Bhojpuri</option>
+                <option value="sat-IN">Santali</option>
+                <option value="dog-IN">Dogri</option>
+              </select>
+            </div>
           </div>
 
           <button
@@ -512,11 +559,17 @@ export default function App() {
   );
 }
 
-async function translateText(text, targetLang) {
+async function translateText(text, sourceLang, targetLang) {
   try {
-    const langCode = targetLang.split('-')[0];
+    const sourceCode = sourceLang.split('-')[0];
+    const targetCode = targetLang.split('-')[0];
+    
+    if (sourceCode === targetCode) {
+      return text;
+    }
+
     const response = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${langCode}`
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceCode}|${targetCode}`
     );
     const data = await response.json();
     if (data.responseStatus === 200 && data.responseData) {
